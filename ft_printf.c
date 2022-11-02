@@ -6,10 +6,12 @@
 /*   By: pvong <marvin@42lausanne.ch>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 13:49:56 by pvong             #+#    #+#             */
-/*   Updated: 2022/11/02 12:04:16 by pvong            ###   ########.fr       */
+/*   Updated: 2022/11/02 12:51:22 by pvong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_printf.h"
+#include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -121,18 +123,25 @@ int	ft_printf(const char *format, ...)
 	i = 0;
 	tab = (t_print *)malloc(sizeof(t_print));
 	if (!tab)
-	va_start(args, format);
+	ft_init_flags(tab);
+	va_start(tab->args, format);
 	while (format[i])
 	{
 		if (format[i] == '%')
 		{
-			if (format[i+1])
-				i++;
-			print = ft_format(str, args);
+			if (format[i + 1])
+				print = ft_format(format[i+1], tab->args);
+			
+		}
+		else
+		{
+			print += write(1, &format[i], 1);
 		}
 		i++;
 	}
-	va_end(args);
+	va_end(tab->args);
+	print += tab->total_length;
+	free(tab);
 	return (print);
 }
 

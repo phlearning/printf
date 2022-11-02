@@ -6,7 +6,7 @@
 /*   By: pvong <marvin@42lausanne.ch>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 10:46:24 by pvong             #+#    #+#             */
-/*   Updated: 2022/11/02 12:04:18 by pvong            ###   ########.fr       */
+/*   Updated: 2022/11/02 12:25:41 by pvong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 # include <stdio.h>
 # include <stdarg.h>
 
-int
+int	ft_printf(const char *format, ...);
 
 #endif
