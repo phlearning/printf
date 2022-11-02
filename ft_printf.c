@@ -6,29 +6,15 @@
 /*   By: pvong <marvin@42lausanne.ch>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 13:49:56 by pvong             #+#    #+#             */
-/*   Updated: 2022/11/02 12:51:22 by pvong            ###   ########.fr       */
+/*   Updated: 2022/11/02 15:46:46 by pvong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
+#include "libft/libft.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-typedef struct s_flags
-{
-	va_list	args;
-	int		width;
-	int		precision;
-	int		zero;
-	int		pnt;
-	int		dash;
-	int		total_length;
-	int		sign;
-	int		zero;
-	int		percent;
-	int		space;
-}	t_print;
 
 t_print *ft_init_flags(t_print *tab)
 {
@@ -49,69 +35,56 @@ t_print *ft_init_flags(t_print *tab)
        void va_end(va_list ap);
        void va_copy(va_list dest, va_list src);*/
 
-// I need to detect the argument which are in between quotes: "..."
-// I need to detect the characters and print it: write
 
-void	ft_putchar(char c)
+int	ft_format_flags(char *format, va_list args, int i)
 {
-	write(1, &c, 1);
-}
-
-int	ft_printchar(char c)
-{
-	write(1, &c, 1);
-	return (1);
-}
-
-int	ft_printstr(char *str)
-{
-	int	i;
-
-	if (!str)
+	while (format[i])
 	{
-		write(1, "(null)", 6);
-		return (6);
+		if (format[i] == '.')
+			tab->pnt = 1;
+		if (format[i] == '-')
+			tab->dash = 1;
+		if (format[i] == '')
 	}
-	i = 0;
-	while (str[i])
+}
+
+// typedef struct s_flags
+// {
+// 	va_list	args;
+// 	int		width;
+// 	int		precision;
+// 	int		zero;
+// 	int		pnt;
+// 	int		dash;
+// 	int		total_length;
+// 	int		sign;
+// 	int		zero;
+// 	int		percent;
+// 	int		space;
+// }	t_print;
+
+int	ft_format(char *format, va_list args, int i)
+{
+	while (format[i])
 	{
-		write(1, &str[i], 1);
+		if (format[i] == 'c')
+			ft_putchar(va_arg(args, int));
+		else if (format[i] == 's')
+			ft_printstr(va_arg(args, char *));
+		else if (format[i] == 'p')
+			ft_printptr(va_arg(args, unsigned long));
+		else if (format[i] == 'd' || format == 'i')
+			ft_printnbr(va_arg(args, int));
+		else if (format[i] == 'u')
+			ft_printnbr(va_arg(args, unsigned long));
+		else if (format[i] == 'x')
+			ft_printhex(va_arg(args, unsigned int));
+		else if (format[i] == 'X')
+			ft_printhex(va_arg(args, unsigned int));
+		else if (format[i] == '%')
+			ft_printpercent(va_arg(args, int));
 		i++;
 	}
-	return (i);
-}
-// I need to detect the numbers and print it: putnumbers & itoa
-
-
-// I need at least 3 functions for the flags in the args:
-
-// one for the field width
-// one for the precision (corresponding to numbers after "." for e)
-// Another for the format
-
-
-
-
-int	ft_format(char format, va_list args)
-{
-	if (format == 'c')
-		ft_putchar(va_arg(args, int));
-	else if (format == 's')
-		ft_printstr(va_arg(args, char *));
-	else if (format == 'p')
-		ft_printmbr(va_arg(args, unsigned long));
-	else if (format == 'd')
-		ft_printnbr(va_arg(args, int);
-	else if (format == 'i')
-		ft_printnbr(va_arg(args, int));
-	else if (format == 'u')
-		ft_printunbr(va_arg(args, unsigned long));
-	else if (format == 'x')
-		ft_printhex(va_arg(args, unsigned int));
-	else if (format == 'X')
-		ft_printhex(va_arg(args, unsigned int));
-	else if (format == '%')
-		ft_printpercent(va_arg(args, int));
 }
 
 int	ft_printf(const char *format, ...)
@@ -120,18 +93,21 @@ int	ft_printf(const char *format, ...)
 	int		i;
 	int		print;
 
-	i = 0;
+	
 	tab = (t_print *)malloc(sizeof(t_print));
 	if (!tab)
 	ft_init_flags(tab);
 	va_start(tab->args, format);
+	i = 0;
+	print = 0;
 	while (format[i])
 	{
 		if (format[i] == '%')
 		{
 			if (format[i + 1])
-				print = ft_format(format[i+1], tab->args);
-			
+			{
+				print = ft_format(format[i+1], tab->args, i);
+			}
 		}
 		else
 		{
@@ -149,7 +125,7 @@ int	main(int argc, char **argv)
 {
 	if (argc < 2)
 		return (0);
-	printf("%s\n", argv[1]);
-	ft_printf("%s\n", argv[1]);
+	printf(argv[1], argv[2]);
+	ft_printf(argv[1], argv[2]);
 	return (0);
 }

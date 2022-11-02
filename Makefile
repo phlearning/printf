@@ -6,15 +6,16 @@
 #    By: pvong <marvin@42lausanne.ch>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/31 13:33:42 by pvong             #+#    #+#              #
-#    Updated: 2022/11/01 17:42:51 by pvong            ###   ########.fr        #
+#    Updated: 2022/11/02 18:41:06 by pvong            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#LIBFT		= ./libft/libft.a
+LIBFT		= ./libft/libft.a
 
 NAME		= libftprintf.a
 
 SRCS		= ft_printf.c \
+				srcs/ft_printf_utils.c
 
 
 OBJS		= $(SRCS:.c=.o)
@@ -31,7 +32,7 @@ CFLAGS		= -Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-			$(MAKE) bonus -C ./libft
+			$(MAKE) -C ./libft
 			cp libft/libft.a $(NAME)
 			$(CC) $(FLAGS) $(INCLUDES) $(SRCS)
 			ar rcs $(NAME) $(OBJS)
@@ -46,9 +47,9 @@ fclean:		clean
 
 re:			fclean all
 
-test:		all
-			
+test:		
+			./a.out
 
-.PHONY:		all clean fclean re bonus
+.PHONY:		all clean fclean re
 
 
