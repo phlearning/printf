@@ -1,50 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_printptr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pvong <marvin@42lausanne.ch>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/02 12:04:26 by pvong             #+#    #+#             */
-/*   Updated: 2022/11/02 15:41:34 by pvong            ###   ########.fr       */
+/*   Created: 2022/11/08 12:41:26 by pvong             #+#    #+#             */
+/*   Updated: 2022/11/09 16:59:28 by pvong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 #include "../libft/libft.h"
 
-int	ft_printstr(char *str)
+/* PTR */
+int	ft_ptr_len(uintptr_t n)
 {
 	int	i;
 
-	if (!str)
-	{
-		write(1, "(null)", 6);
-		return (6);
-	}
 	i = 0;
-	while (str[i])
+	while (n != 0)
 	{
-		write(1, &str[i], 1);
+		n /= 16;
 		i++;
 	}
 	return (i);
 }
 
-void	ft_putchar(char c)
+void	ft_put_ptr(uintptr_t n)
 {
-	write(1, &c, 1);
+	if (n >= 16)
+	{
+		ft_put_ptr(n / 16);
+		ft_put_ptr(n % 16);
+	}
+	else if (n < 10)
+		ft_putchar_fd(n + '0', 1);
+	else
+		ft_putchar_fd(n - 10 + 'a', 1);
 }
 
-int	ft_printchar(char c)
+int	ft_printptr(unsigned long long n)
 {
-	write(1, &c, 1);
-	return (1);
-}
+	int	len;
 
-int	ft_printnbr(va_list args)
-{
-	int	nbr;
-
-	nbr = ft_itoa(args)
+	len = 0;
+	len += write(1, "0x", 2);
+	if (n == 0)
+	{
+		len += write(1, "0", 1);
+		return (len);
+	}
+	else
+	{
+		ft_put_ptr(n);
+		len += ft_ptr_len(n);
+	}
+	return (len);
 }
